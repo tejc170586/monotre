@@ -3,6 +3,8 @@ package com.example.monotre
 import android.Manifest
 import android.app.Dialog
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.os.Environment
 import android.os.RemoteException
@@ -15,7 +17,9 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.list_item.*
 import org.altbeacon.beacon.*
+import kotlin.math.roundToInt
 
 
 class MainActivity : AppCompatActivity(), BeaconConsumer, SingleDialogFragment.NoticeDialogListener {
@@ -46,6 +50,25 @@ class MainActivity : AppCompatActivity(), BeaconConsumer, SingleDialogFragment.N
         
         Log.d("create", "deteruyo^")
     
+//        textView1.text = "test"
+        /**
+         * ここから
+         */
+    
+//        val listView: ListView = findViewById(R.id.listView1)
+//
+//        val listItems = mutableListOf<ListItem>()
+//        for(i in 0..10) {
+//            val bmp: Bitmap? = BitmapFactory
+//                    .decodeResource(resources, R.mipmap.key)
+//
+//            val item = ListItem(bmp, "Key", "000-000-00${i}", "1.0000")
+//            //test
+//            listItems.add(item)
+//        }
+//
+//        val adapter = ListAdapter(this, R.layout.list_item, listItems)
+//        listView.adapter = adapter
     }
     
     private fun floatingActionButtonOnToast(str: String) {
@@ -170,14 +193,15 @@ class MainActivity : AppCompatActivity(), BeaconConsumer, SingleDialogFragment.N
         data class BeaconDetail(val id1: Identifier, val id2: Identifier, val id3: Identifier, val distance: Double){
         }
 
-        val map2 = mutableMapOf<String, String>()
         val beaconDetailsMap = mutableMapOf<String, String>()
+        var distanceFirst = ""
         beaconManager.addRangeNotifier { beacons, region ->
             if(beacons.count() > 0){
                 beacons
                         .map{
                             val beaconDetail = BeaconDetail(it.id1, it.id2, it.id3, it.distance).toString().replace(it.id1.toString(), "")
                             // ↑ .replaceでUUIDを削除
+                            distanceFirst = it.distance.toString()
                             beaconDetailsMap += it.id1.toString() to beaconDetail
                             it
                         }
@@ -185,14 +209,32 @@ class MainActivity : AppCompatActivity(), BeaconConsumer, SingleDialogFragment.N
                         .forEach { Log.d("iBeacon", it)}
                 Log.d("iBeacon", "beacon available")
                 //ListView設定
-                val adapter = ArrayAdapter(
-                        this,
-                        android.R.layout.simple_list_item_1,
-                        beaconDetailsMap.toList()
-                )
+//                val adapter = ArrayAdapter(
+//                        this,
+//                        android.R.layout.simple_list_item_1,
+//                        beaconDetailsMap.toList()
+//                )
+//
+//                listView1.adapter = adapter
+    
+                /**
+                 * ここから
+                 */
+                val listView: ListView = findViewById(R.id.listView1)
+    
+                val listItems = mutableListOf<ListItem>()
                 
+                val bmp: Bitmap? = BitmapFactory
+                        .decodeResource(resources, R.mipmap.key)
+                
+                Log.d("distanceFirst", distanceFirst)
+                val item = ListItem(bmp, "$inputItemName", "$inputUUID", "$distanceFirst")
+                //test
+                listItems.add(item)
+                
+                val adapter = ListAdapter(this, R.layout.list_item, listItems)
                 listView1.adapter = adapter
-                
+    
                 Log.d("normally", "listView")
                 
             }else{
