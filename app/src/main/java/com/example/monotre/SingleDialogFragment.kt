@@ -11,7 +11,6 @@ import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 
 
-
 class SingleDialogFragment: DialogFragment() {
     private lateinit var listener: NoticeDialogListener
     interface NoticeDialogListener {
@@ -35,21 +34,7 @@ class SingleDialogFragment: DialogFragment() {
         
         return activity?.let {
             val builder = AlertDialog.Builder(it)
-            val inflater = requireActivity().layoutInflater;
-//            builder.setView(inflater.inflate(R.layout.dialog_registration, null))
-//                    .setPositiveButton(R.string.ok,
-//                            DialogInterface.OnClickListener { dialog, id ->
-//                                // TODO: 登録処理
-//                                Log.d("tagB", "message")
-//                                this.listener.onDialogPositiveClick(this)
-//                            })
-//                    .setNegativeButton(R.string.cancel,
-//                            DialogInterface.OnClickListener { dialog, id ->
-//                                Log.d("tagA", "message")
-//                                getDialog()?.cancel()
-//                                this.listener.onDialogNegativeClick(this)
-//                            })
-            //
+            val inflater = requireActivity().layoutInflater
             builder.setView(inflater.inflate(R.layout.dialog_registration, null))
                     .setPositiveButton(R.string.ok) { _, _ ->
                         Log.d("normally", "setPositiveButton")
@@ -74,15 +59,6 @@ class SingleDialogFragment: DialogFragment() {
             return dialog
         } ?: throw IllegalStateException("Activity cannot be null")
         
-        //
-//        val array = arrayOf("国語", "算数")
-//        val adapter: ArrayAdapter<String> = ArrayAdapter<String>(
-//                activity,
-//                android.R.layout.simple_list_item_1,
-//                array)
-//
-//        val listView = R.layout.dialog_registration
-        //
     }
     
     private fun checkDialog(target: Dialog?): Boolean {

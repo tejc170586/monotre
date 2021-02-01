@@ -13,7 +13,6 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.DialogFragment
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.android.synthetic.main.activity_main.*
 import org.altbeacon.beacon.*
@@ -27,38 +26,18 @@ class MainActivity : AppCompatActivity(), BeaconConsumer, SingleDialogFragment.N
     private lateinit var beaconManager: BeaconManager
     private var isScanning = false
     
-    /**
-     * test
-     */
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
-    private lateinit var viewManager: RecyclerView.LayoutManager
-    
     private var inputItemName : String = ""
     private var inputUUID     : String = ""
     private var inputMajor    : String = ""
     private var inputMinor    : String = ""
-    private var cont = 1
-    
-    /**
-     * /test
-     */
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-    
-        /**
-         * test
-         */
-//        setSupportActionBar(findViewById(R.id.toolbar))
 
         findViewById<FloatingActionButton>(R.id.fab).setOnClickListener {
             floatingActionButtonOnToast("登録したいデバイスを選択してください")
         }
-        /**
-         * /test
-         */
     
         beaconManager = BeaconManager.getInstanceForApplication(this)
         beaconManager.beaconParsers.add(BeaconParser().setBeaconLayout(BeaconUtil.IBEACON_FORMAT))
@@ -67,21 +46,8 @@ class MainActivity : AppCompatActivity(), BeaconConsumer, SingleDialogFragment.N
         
         Log.d("create", "deteruyo^")
     
-//        val data = arrayOf("パンダ", "ダチョウ", "ウミガメ", "メダカ")
-//
-//        val adapter = ArrayAdapter(
-//                this,
-//                android.R.layout.simple_list_item_1,
-//                data
-//        )
-//
-//        listView1.adapter = adapter
-        
     }
     
-    /**
-     * test
-     */
     private fun floatingActionButtonOnToast(str: String) {
         toastDisplay(str)
         SingleDialogFragment().show(supportFragmentManager, "missiles")
@@ -146,35 +112,12 @@ class MainActivity : AppCompatActivity(), BeaconConsumer, SingleDialogFragment.N
             
 //            nzn氏にpass
             beaconManager.bind(this)
-//            nznCode(inputItemName, inputUUID, inputMajor, inputMinor)
-        }
-    
-        fun nznCode(name: String, uuid: String, major: String, minor: String) {
-            //nzn氏の書いたコードを記述する
         }
     
         override fun onDialogNegativeClick(dialog: DialogFragment) {
             Log.d("mainActivity", "onDialogNegativeClick")
         }
-    /**
-     * /test
-     */
-
-    // Check Permission.
-//    private fun checkAndRequestPermissions() {
-//        val permissions = arrayOf(
-//                Manifest.permission.ACCESS_COARSE_LOCATION,
-//                Manifest.permission.ACCESS_FINE_LOCATION
-//        )
-//        val permissionsNotGranted =
-//            permissions
-//                .filter {
-//                    ActivityCompat.checkSelfPermission(this, it) ==
-//                            PackageManager.PERMISSION_GRANTED
-//                }.toTypedArray()
-//        ActivityCompat.requestPermissions(this, permissionsNotGranted, PERMISSIONS_REQUEST_CODE)
-//    }
-
+    
     private fun checkPermission(){
         if((ActivityCompat.checkSelfPermission(this,
                         Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) ||
@@ -196,18 +139,15 @@ class MainActivity : AppCompatActivity(), BeaconConsumer, SingleDialogFragment.N
     // Start Service.
     override fun onResume(){
         super.onResume()
-//        beaconManager.bind(this)
         isScanning = true
     }
-
-
+    
     // Service termination.
     override fun onPause(){
         super.onPause()
         beaconManager.unbind(this)
     }
-
-
+    
     override fun onBeaconServiceConnect(){
 
         beaconManager.addMonitorNotifier(object : MonitorNotifier {
@@ -228,19 +168,10 @@ class MainActivity : AppCompatActivity(), BeaconConsumer, SingleDialogFragment.N
 
         // 表示用データクラス
         data class BeaconDetail(val id1: Identifier, val id2: Identifier, val id3: Identifier, val distance: Double){
-//            val uuid  = id1.toString()
-//            val major = id2.toString()
-//            val minor = id3.toString()
-//            val distance = ((distance * 100).roundToInt() / 100).toString()
-//            val category = if(distance < 1) "NEAR" else "FAR"
         }
 
         val map2 = mutableMapOf<String, String>()
-        val list2 = ArrayList(map2.values)
-        
-        val beaconDetails = mutableListOf<BeaconDetail>()
         val beaconDetailsMap = mutableMapOf<String, String>()
-        val list = mutableListOf<String>()
         beaconManager.addRangeNotifier { beacons, region ->
             if(beacons.count() > 0){
                 beacons
@@ -254,59 +185,26 @@ class MainActivity : AppCompatActivity(), BeaconConsumer, SingleDialogFragment.N
                         .forEach { Log.d("iBeacon", it)}
                 Log.d("iBeacon", "beacon available")
                 //ListView設定
-                val data = arrayOf("パンダ", "ダチョウ", "ウミガメ", "メダカ")
                 val adapter = ArrayAdapter(
                         this,
                         android.R.layout.simple_list_item_1,
-//                     data
                         beaconDetailsMap.toList()
                 )
                 
                 listView1.adapter = adapter
                 
-//                beaconDetails.clear()
-                
                 Log.d("normally", "listView")
                 
-//                adapter.clear()
-//                adapter.notifyDataSetChanged()
-
-
-//                val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, beaconDetails)
-//                listView1.adapter = arrayAdapter
             }else{
                 Log.d("iBeacon", "No beacon available")
             }
         }
-
-
-
-
-//        val major: Identifier = Identifier.parse("0")
-//        val mRegion: Region = Region("iBeacon", null, major, null)
     
         Log.d("inputId : ", "inputItemName : $inputItemName, inputUUID : $inputUUID,  inputMajor : $inputMajor, inputMinor : $inputMinor")
-        // 入力したinputItemName, inputUUID, inputMajor, inputMinorは正常に取得できていることを確認
-        /**
-         * ↓ こっちのコードは正常に通って
-         */
-//        val idUUID:Identifier  = Identifier.parse("12345678-9012-3456-7890-123456789012")
-//        val idMajor:Identifier = Identifier.parse("0")
-//        val idMinor:Identifier = Identifier.parse("0")
-//        val mRegion: Region    = Region("test", idUUID, idMajor, idMinor)
-        /**
-         * ↓ こっちのコードは通らない
-         * java.lang.RuntimeException: Unable to resume activity {com.example.monotre/com.example.monotre.MainActivity}:
-         * java.lang.IllegalArgumentException: Unable to parse Identifier. が発生
-          */
         val idUUID:Identifier  = Identifier.parse(inputUUID)
         val idMajor:Identifier = Identifier.parse(inputMajor)
         val idMinor:Identifier = Identifier.parse(inputMinor)
         val mRegion: Region    = Region(inputItemName, idUUID, idMajor, idMinor)
-//         inputItemName, inputUUID, inputMajor, inputMinorは空文字のStringグローバル変数
-        /**
-         * ドウシテ・・・
-         */
         
         try {
             Log.d("Debug", "Start Monitoring.")
@@ -317,5 +215,6 @@ class MainActivity : AppCompatActivity(), BeaconConsumer, SingleDialogFragment.N
         }
 
     }
+    
 }
 
